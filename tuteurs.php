@@ -1,3 +1,6 @@
+<?php
+require_once 'connexion.php';
+?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -11,6 +14,7 @@
     <link rel="stylesheet" type="text/css" href="css/tuteurs.css">
     <title>Tuteurs-Gestion-Simplon</title>
 </head>
+
 <body>
 <div class="container">
 	<nav class="navbar navbar-expand-lg navbar-light">
@@ -30,13 +34,10 @@
   </div>
 </nav>
 <div id="global">
-
-
-  
-
   <div class="fils" id="liste"> 
   <h1 id="bienvenu" id="p2">Liste des Tuteurs</h1>
 <div class="table-responsive-sm">
+
 <table class="table stable table-bordered">
   <thead class="stable">
     <tr  class="stable1" >
@@ -45,30 +46,39 @@
       <th scope="col">Prénom</th>
       <th scope="col">Profession</th>
       <th scope="col">Contact</th>
+      <th scope="col">Detail</th>
     </tr>
   </thead>
-  <tbody>
-    <tr>
-      <td>1</td>
-      <td>OUEDRAOGO</td>
-      <td>Salif</td>
-      <td>Douanier</td>
-      <td>00593215</td>
 
-    </tr>
+  <tbody>
+
     <tr>
-      <td>2</td>
-      <td>NABALOUM</td>
-      <td>Ali</td>
-      <td>Enseignant</td>
-      <td>00632255</td>
-    </tr>
-    <tr>
-      <td >3</td>
-      <td>BEOGO </td>
-      <td>Louis</td>
-      <td>Musicien</td>
-      <td>03212255</td>
+    <?php
+      try
+      {
+    
+      $sql = bd()->query('SELECT * FROM tuteurs ORDER BY nom ASC');
+      $i=0;
+        
+      while ($donnees = $sql->fetch())
+      {
+          $i++;
+          echo "<tr>";
+          echo "<td> $i </td>";
+          echo "<td> $donnees[nom] </td>";
+          echo "<td> $donnees[prenom] </td>";
+          echo "<td> $donnees[profession] </td>";
+          echo "<td> $donnees[contact] </td>";
+          echo "<td><a >Detail</a></td>";
+          echo "</tr>";
+      }
+      $sql->closeCursor();
+      }
+      catch(Exception $e)
+      {
+          die('Erreur : '.$e->getMessage());
+      }
+    ?>
     </tr>
   </tbody>
 </table>
@@ -77,32 +87,30 @@
 <button type="button" class="btn btn-danger sbouton2">Imprimer</button>
 <button type="button" onclick="afficher('formulaire')" class="btn btn-danger sbouton2">Nouveau</button>
 </div>
-  
   </div>
 <div class="fils" id="formulaire">
 
-  <h1 id="bienvenu">Formulaire des tuteurs</h1>
+<h1 id="bienvenu">Formulaire des tuteurs</h1>
 
-<form>
+<form action="insertion.php" method="POST">
   <div class="form-group">
-    <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Nom">
+    <input type="text" name="nom" class="form-control" id="exampleFormControlInput1" placeholder="Nom" required ="required">
   </div>
   <div class="form-group">
-    <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Prénom">
+    <input type="text" name="prenom" class="form-control" id="exampleFormControlInput1" placeholder="Prénom" required ="required">
   </div>
   <div class="form-group">
-    <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Profession">
+    <input type="text" name="profession" class="form-control" id="exampleFormControlInput1" placeholder="Profession" required ="required">
   </div>
   <div class="form-group">
-    <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Contact">
+    <input type="number" name="contact" class="form-control" id="exampleFormControlInput1" placeholder="Contact" required ="required">
+  </div>
+  <div class="sbouton1">
+    <input type="submit" value="Ajouter" name="valider" class="btn btn-danger sbouton2">
+    <button type="button" class="btn btn-danger sbouton2"onclick="afficher('list')">Annuler</button>
   </div>
 </form>
-<button type="button" class="btn btn-danger boutton" onclick="afficher('list')">Annuler</button>
-<button type="button" class="btn btn-danger boutton">Ajouter</button>
-
-
   </div>
-
    <div class="fils" id="details"></div>
 </div>
 <div id="footer">

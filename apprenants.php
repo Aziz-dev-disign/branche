@@ -1,4 +1,6 @@
-
+<?php
+require_once 'connexion.php';
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -40,6 +42,7 @@
       <th scope="col">Nom</th>
       <th scope="col">Prénom</th>
       <th scope="col">Date naissance</th>
+      <th scope="col">Genre</th>
       <th scope="col">Ville Origine</th>
       <th scope="col">Formation</th>
       <th scope="col">Etablissement</th>
@@ -49,97 +52,125 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>1</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
+  <tr>
+  <?php
+    try
+    {
+  
+    $sql = bd()->query('SELECT * FROM apprenants ORDER BY nom ASC');
+    
+    while ($donnees = $sql->fetch())
+
+    {
+
+        if ($donnees['id_tuteur']){
+          $reqtuteur = bd()->query("SELECT nom,prenom FROM tuteurs WHERE id_tuteur=$donnees[id_tuteur]");
+          while ($tut =$reqtuteur->fetch()){
+
+          $nom=$tut['nom'];
+          $prenom=$tut['prenom'];
+          }
+        }
+        echo "<tr>";
+        echo "<td> $donnees[id_apprenant] </td>";
+        echo "<td> $donnees[nom] </td>";
+        echo "<td> $donnees[prenom] </td>";
+        echo "<td> $donnees[date_naiss] </td>";
+        echo "<td> $donnees[genre] </td>";
+        echo "<td> $donnees[ville] </td>";
+        echo "<td> $donnees[formation] </td>";
+        echo "<td> $donnees[etabliss] </td>";
+        echo "<td> $GLOBALS[nom].$GLOBALS[prenom]</td>";
+        echo "<td> $donnees[contact] </td>";
+        echo "<td><a >Detail</a></td>";
+        echo "</tr>";
+
+
+    }
+    $sql->closeCursor();
+    }
+    catch(Exception $e)
+    {
+        die('Erreur : '.$e->getMessage());
+    }
+  ?>
+  </tr>
   </tbody>
 </table>
 </div>
-<button type="button" class="btn btn-danger btn-valid">Imprimer</button>
-<button type="button" class="btn btn-danger btn-valid" onclick="afficher('form')">Nouveau</button>
+<div class="buttonap">
+     <button type="button" class="btn btn-danger btn-valid">Imprimer</button>
+     <button type="button" class="btn btn-danger btn-valid" onclick="afficher('formulaire')">Nouveau</button>
+</div>
   </div>
-  <div class="fils" id="formulaire">
+<div class="fils" id="formulaire">
   <h1 id="bienvenu">Formulaire Apprenants</h1>
-<form class="bg">
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="input">Nom</label>
-      <input type="text" class="form-control" id="inputEmail4">
+  
+    <form action="insertion-apprenants.php"method="post"> 
+  <div class="row">
+    <div class="col">
+      <input type="text" class="form-control" name="nom" placeholder="Nom" required ="required">
     </div>
-    <div class="form-group col-md-6">
-      <label for="input">Prenoms</label>
-      <input type="text" class="form-control" id="inputPassword4">
+    <div class="col">
+      <input type="text" class="form-control" name="prenom" placeholder="Prénom" required ="required">
     </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputdate">Date de naissance</label>
-      <input type="date" class="form-control" id="inputEmail4">
+  </div><br>
+  <div class="row">
+    <div class="col">
+      <input type="date" class="form-control" name="d_naiss" placeholder="Date de naissance" required ="required">
     </div>
-    <div class="form-group col-md-6">
-      <label for="inputPassword4">Ville d'origine</label>
-      <input type="text" class="form-control" id="inputPassword4">
+    <div class="col">
+      <input type="text" class="form-control" name="v_origine" placeholder="Ville d'origine" required ="required">
     </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="input">Formation</label>
-      <input type="text" class="form-control" id="inputEmail4">
+  </div><br>
+  <div class="row">
+    <div class="col">
+      <input type="text" class="form-control" name="formation" placeholder="Formation" required ="required">
     </div>
-    <div class="form-group col-md-6">
-      <label for="input">Etablissement</label>
-      <input type="text" class="form-control" id="inputPassword4">
+    <div class="col">
+      <input type="text" class="form-control" name="e_precedante" placeholder="Etablicement précédante" required ="required">
     </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="input">Contact</label>
-      <input type="tel" class="form-control" id="inputEmail4">
+  </div><br>
+  <div class="row">
+    <div class="col">
+      <input type="text" class="form-control" name="contact" placeholder="Contact" required ="required">
     </div>
+
     <div class="form-group col-md-6">
-      <label for="inputState">Tuteur</label>
-      <select id="inputState" class="form-control">
-        <option selected>Choose...</option>
-        <option>...</option>
+      <select id="inputState" class="form-control" name="tuteur" required ="required">
+        <!-- <option selected>Selectioner son tuteur </option> -->
+      <?php
+      $requette = bd()->query('SELECT * FROM tuteurs');
+      while ($donnees = $requette->fetch())
+     {
+      echo '<option value="' . $donnees['id_tuteur'] . '">' . $donnees['id_tuteur'] . " - " . $donnees['nom'] . " - " . $donnees['prenom'] . " - " . $donnees['profession'] . " - " . $donnees['contact']. '</option>';
+     }
+    //  $resultat->closeCursor();
+     ?>
       </select>
     </div>
-  </div>
+  </div><br>
+  <label>Genre:</label>
+  <div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="sexe" id="inlineRadio1" value="Masculin">
+  <label class="form-check-label" for="inlineRadio1">Masculin</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="sexe" id="inlineRadio2" value="Femme">
+  <label class="form-check-label" for="inlineRadio2">Feminin</label>
+</div>
   <div class="form-row">
     <div class="form-group row-md-6">
-      <label for="input">Photo</label>
       <div id="photo"><img id="profil" class="iconapp" src="images/icon.jpg"></div>
     </div> 
   </div>
   <input type="file" class="form-controlb" id="inputPassword4" oninput="afficherPhoto(this,'profil')">
   <div class="buttonap">
-    <button type="button" class="btn btn-danger">Ajouter</button>
+    <input type="submit" value="Ajouter" name="valider" class="btn btn-danger sbouton2">
     <button type="button" class="btn btn-danger" onclick="afficher('liste')">Annuler</button>
-</div>
-  
-
-</form>
   </div>
+</form>
+    </div>
    <div class="fils" id="details"></div>
 </div>
 <div id="footer">

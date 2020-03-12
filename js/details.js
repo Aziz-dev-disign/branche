@@ -1,6 +1,4 @@
 
-
-
 	function afficherPhoto(self,idPhoto){
 	  
 		var photo=document.getElementById(idPhoto);
@@ -15,15 +13,4 @@
 	    alert("veillez choisir une photo");
 	  }
 		}
-
-
 	}
-	
-	
-
-
-
-
-
-
-
