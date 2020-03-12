@@ -1,3 +1,10 @@
+create database projet_simplon;
+
+
+drop table if exists APPRENANTS;
+
+drop table if exists TUTEURS;
+
 
 /*==============================================================*/
 /* Table : APPRENANTS                                           */
@@ -13,7 +20,7 @@ create table APPRENANTS
    formation            varchar(50),
    etabliss             varchar(50),
    contact              int,
-   photo                varchar(50),
+   photo                tinyint,
    primary key (id_apprenant)
 );
 
